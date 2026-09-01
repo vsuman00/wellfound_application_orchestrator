@@ -150,5 +150,6 @@ compilable CLI, managed-browser setup, secure runtime boundaries, immutable doma
 contracts, infrastructure port contracts, the SQLite driver decision, and transactional
 local persistence with lock and recovery primitives, plus persistent managed sessions.
 The local sanitized fixture journeys and scan-only adapter are also in place, and the
-pure matching policy is implemented. T-012 still needs its persistence/CLI bridge;
-hosted Windows portability and full concurrent-process evidence remain open.
+matching policy plus persistence bridge are implemented. T-012 still needs its public
+CLI command; hosted Windows portability and full concurrent-process evidence remain
+open.

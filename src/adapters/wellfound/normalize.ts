@@ -5,6 +5,7 @@ export interface JobFacts {
   readonly company: string;
   readonly location: string;
   readonly href: string;
+  readonly publishedAt: string;
 }
 
 export interface RawJobFacts {
@@ -13,10 +14,11 @@ export interface RawJobFacts {
   readonly company: string | null;
   readonly location: string | null;
   readonly href: string | null;
+  readonly publishedAt: string | null;
 }
 
 export function normalizeJob(raw: RawJobFacts): JobFacts | null {
-  const values = [raw.id, raw.title, raw.company, raw.location, raw.href];
+  const values = [raw.id, raw.title, raw.company, raw.location, raw.href, raw.publishedAt];
   if (values.some((value) => value === null || value.trim().length === 0)) {
     return null;
   }
@@ -27,6 +29,7 @@ export function normalizeJob(raw: RawJobFacts): JobFacts | null {
     title: raw.title as string,
     company: raw.company as string,
     location: raw.location as string,
-    href: raw.href as string
+    href: raw.href as string,
+    publishedAt: raw.publishedAt as string
   };
 }

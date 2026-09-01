@@ -3,7 +3,7 @@ import { dirname } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 export const INITIAL_SCHEMA_VERSION = 1;
-export const LATEST_SCHEMA_VERSION = 2;
+export const LATEST_SCHEMA_VERSION = 3;
 
 export const INITIAL_SCHEMA = `
 CREATE TABLE jobs (
@@ -100,6 +100,13 @@ CREATE UNIQUE INDEX applications_one_per_job
 ALTER TABLE application_attempts ADD COLUMN outcome_reason TEXT;
 `;
 
+export const THIRD_SCHEMA = `
+ALTER TABLE jobs ADD COLUMN location TEXT NOT NULL DEFAULT '';
+ALTER TABLE jobs ADD COLUMN href TEXT NOT NULL DEFAULT '';
+ALTER TABLE jobs ADD COLUMN skills_json TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE jobs ADD COLUMN published_at TEXT NOT NULL DEFAULT '';
+`;
+
 export function openDatabase(databasePath: string): DatabaseSync {
   mkdirSync(dirname(databasePath), { recursive: true });
   const database = new DatabaseSync(databasePath, {
@@ -128,7 +135,8 @@ function migrate(database: DatabaseSync): void {
 
   const migrations: ReadonlyArray<readonly [number, string]> = [
     [INITIAL_SCHEMA_VERSION, INITIAL_SCHEMA],
-    [2, SECOND_SCHEMA]
+    [2, SECOND_SCHEMA],
+    [3, THIRD_SCHEMA]
   ];
   for (const [version, sql] of migrations) {
     if (version <= latestVersion) {

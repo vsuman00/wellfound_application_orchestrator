@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 PARTIAL; NEXT T-012 PERSISTENCE BRIDGE`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 PARTIAL; NEXT T-012 CLI`
 
 ## T-000: Create isolated planning repository
 
@@ -280,18 +280,21 @@ browser evidence remains pending.
 **Acceptance criteria:**
 
 - [x] Criteria produce stable include/exclude/score explanations.
-- [ ] Freshness, blocklist, duplicate, and budget rules override scores.
+- [x] Freshness, blocklist, duplicate, and budget rules override scores.
 - [ ] CLI scan persists one normalized record and emits a redacted summary.
 
-**Verification:** 3 matching-policy unit tests pass as part of the 45-test suite, with
-lint, both typecheck passes, and build green. The pure policy is deterministic and
-fail-closed; persisted scan records and the `scan` CLI remain unimplemented.
+**Verification:** 3 matching-policy unit tests and 1 persisted-scan integration test
+pass as part of the 46-test suite, with lint, both typecheck passes, and build green.
+The policy and repository bridge are deterministic and fail-closed; the public `scan`
+CLI command remains unimplemented.
 
 **Likely files:** `src/policies/matching.ts`, `src/orchestrator/scan.ts`, `src/cli/scan.ts`, `tests/integration/scan.test.ts`.
 
 **Dependencies:** T-011, T-007.
 
-**Evidence:** `src/policies/matching.ts` and `tests/unit/matching.test.ts`.
+**Evidence:** `src/policies/matching.ts`, `src/orchestrator/scan.ts`, `src/domain/job.ts`,
+`src/persistence/repositories.ts`, `tests/unit/matching.test.ts`, and
+`tests/integration/scan.test.ts`.
 
 ## Checkpoint G2: Managed browser and scan-only
 

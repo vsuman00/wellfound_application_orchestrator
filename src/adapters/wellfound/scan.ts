@@ -21,14 +21,16 @@ async function readJobCard(card: Locator): Promise<JobFacts | null> {
     title: await card.locator(wellfoundLocators.title).textContent(),
     company: await card.locator(wellfoundLocators.company).textContent(),
     location: await card.locator(wellfoundLocators.location).textContent(),
-    href: await card.locator(wellfoundLocators.jobLink).getAttribute("href")
+    href: await card.locator(wellfoundLocators.jobLink).getAttribute("href"),
+    publishedAt: await card.getAttribute("data-published-at")
   };
   return normalizeJob({
     id: raw.id?.trim() ?? null,
     title: raw.title?.trim() ?? null,
     company: raw.company?.trim() ?? null,
     location: raw.location?.trim() ?? null,
-    href: raw.href?.trim() ?? null
+    href: raw.href?.trim() ?? null,
+    publishedAt: raw.publishedAt?.trim() ?? null
   });
 }
 
