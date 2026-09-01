@@ -39,6 +39,12 @@ describe("parseArgs", () => {
     );
   });
 
+  it("requires one explicit application id for approval review", () => {
+    expect(parseArgs(["approve"])).toEqual({ command: "error", message: "approve requires --application-id <id> with optional --confirm." });
+    expect(parseArgs(["approve", "--application-id", "application-1"])).toEqual({ command: "approve", applicationId: "application-1", confirm: false });
+    expect(parseArgs(["approve", "--application-id", "application-1", "--confirm"])).toEqual({ command: "approve", applicationId: "application-1", confirm: true });
+  });
+
   it("rejects unknown commands and extra arguments", () => {
     expect(parseArgs(["scan"])).toEqual({
       command: "error",

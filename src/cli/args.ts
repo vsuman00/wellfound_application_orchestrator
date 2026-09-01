@@ -3,6 +3,7 @@ export type CliResult =
   | { readonly command: "version" }
   | { readonly command: "setup" }
   | { readonly command: "scan"; readonly url: string }
+  | { readonly command: "approve"; readonly applicationId: string; readonly confirm: boolean }
   | { readonly command: "error"; readonly message: string };
 
 export function parseArgs(argv: readonly string[]): CliResult {
@@ -38,6 +39,16 @@ export function parseArgs(argv: readonly string[]): CliResult {
       return { command: "error", message: "scan requires exactly --url <loopback-url>." };
     }
     return { command: "scan", url: rest[1] };
+  }
+
+  if (first === "approve") {
+    if (rest.length !== 2 && rest.length !== 3) {
+      return { command: "error", message: "approve requires --application-id <id> with optional --confirm." };
+    }
+    if (rest[0] !== "--application-id" || rest[1] === undefined || (rest.length === 3 && rest[2] !== "--confirm")) {
+      return { command: "error", message: "approve requires --application-id <id> with optional --confirm." };
+    }
+    return { command: "approve", applicationId: rest[1], confirm: rest.length === 3 };
   }
 
   return { command: "error", message: `Unknown command: ${first}` };

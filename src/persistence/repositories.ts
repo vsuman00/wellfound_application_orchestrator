@@ -1,6 +1,6 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { ApplicationState } from "../domain/state-machine.js";
-import type { ApplicationRepository, AuditPort, DraftRepository, UnitOfWork } from "../domain/ports.js";
+import type { ApplicationRepository, ApprovalRepository, AuditPort, DraftRepository, UnitOfWork } from "../domain/ports.js";
 import type { AuditEvent } from "../domain/audit.js";
 import type { JobRepository } from "../domain/ports.js";
 import type { JobRecord } from "../domain/job.js";
@@ -8,18 +8,20 @@ import type { DraftRecord } from "../domain/draft.js";
 
 interface ApplicationRow {
   readonly id: string;
+  readonly job_id: string | null;
   readonly state: ApplicationState;
   readonly confirmed_evidence_id: string | null;
 }
 
 export function createApplicationRepository(database: DatabaseSync): ApplicationRepository {
   const read = database.prepare(
-    "SELECT id, state, confirmed_evidence_id FROM applications WHERE id = ?"
+    "SELECT id, job_id, state, confirmed_evidence_id FROM applications WHERE id = ?"
   );
   const write = database.prepare(`
-    INSERT INTO applications (id, state, confirmed_evidence_id)
-    VALUES (?, ?, ?)
+    INSERT INTO applications (id, job_id, state, confirmed_evidence_id)
+    VALUES (?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
+      job_id = excluded.job_id,
       state = excluded.state,
       confirmed_evidence_id = excluded.confirmed_evidence_id,
       updated_at = CURRENT_TIMESTAMP
@@ -31,12 +33,15 @@ export function createApplicationRepository(database: DatabaseSync): Application
       if (row === undefined) {
         return null;
       }
-      return row.confirmed_evidence_id === null
-        ? { id: row.id, state: row.state }
-        : { id: row.id, state: row.state, confirmedEvidenceId: row.confirmed_evidence_id };
+      return {
+        id: row.id,
+        ...(row.job_id === null ? {} : { jobId: row.job_id }),
+        state: row.state,
+        ...(row.confirmed_evidence_id === null ? {} : { confirmedEvidenceId: row.confirmed_evidence_id })
+      };
     },
     async save(record) {
-      write.run(record.id, record.state, record.confirmedEvidenceId ?? null);
+      write.run(record.id, record.jobId ?? null, record.state, record.confirmedEvidenceId ?? null);
     }
   };
 }
@@ -71,6 +76,7 @@ interface JobRow {
 
 export function createJobRepository(database: DatabaseSync): JobRepository {
   const read = database.prepare("SELECT * FROM jobs WHERE canonical_identity = ?");
+  const readById = database.prepare("SELECT * FROM jobs WHERE id = ?");
   const write = database.prepare(`
     INSERT INTO jobs
       (id, canonical_identity, title, company, location, href, skills_json, published_at, discovered_at)
@@ -85,9 +91,7 @@ export function createJobRepository(database: DatabaseSync): JobRepository {
       discovered_at = excluded.discovered_at
   `);
 
-  return {
-    async getByCanonicalIdentity(identity) {
-      const row = read.get(identity) as JobRow | undefined;
+  const mapJob = (row: JobRow | undefined): JobRecord | null => {
       if (row === undefined) {
         return null;
       }
@@ -102,6 +106,13 @@ export function createJobRepository(database: DatabaseSync): JobRepository {
         publishedAt: row.published_at,
         discoveredAt: row.discovered_at
       };
+  };
+  return {
+    async getByCanonicalIdentity(identity) {
+      return mapJob(read.get(identity) as JobRow | undefined);
+    },
+    async getById(id) {
+      return mapJob(readById.get(id) as JobRow | undefined);
     },
     async upsert(record: JobRecord) {
       write.run(
@@ -138,6 +149,7 @@ interface AnswerRow {
 
 export function createDraftRepository(database: DatabaseSync): DraftRepository {
   const read = database.prepare("SELECT * FROM drafts WHERE idempotency_key = ?");
+  const readByApplication = database.prepare("SELECT * FROM drafts WHERE application_id = ? ORDER BY id DESC LIMIT 1");
   const readAnswers = database.prepare("SELECT question_key AS key, decision_kind, answer, fact_id, reason FROM answers WHERE draft_id = ? ORDER BY id");
   const writeDraft = database.prepare(`
     INSERT INTO drafts (id, application_id, created_at, idempotency_key, disposition, review_reasons_json)
@@ -153,9 +165,7 @@ export function createDraftRepository(database: DatabaseSync): DraftRepository {
     VALUES (?, ?, ?, ?, ?)
   `);
 
-  return {
-    async getByIdempotencyKey(key) {
-      const row = read.get(key) as DraftRow | undefined;
+  const mapDraft = (row: DraftRow | undefined): DraftRecord | null => {
       if (row === undefined || row.idempotency_key === null) {
         return null;
       }
@@ -178,6 +188,13 @@ export function createDraftRepository(database: DatabaseSync): DraftRepository {
         reviewReasons: JSON.parse(row.review_reasons_json) as string[],
         createdAt: row.created_at
       };
+  };
+  return {
+    async getByIdempotencyKey(key) {
+      return mapDraft(read.get(key) as DraftRow | undefined);
+    },
+    async getByApplicationId(applicationId) {
+      return mapDraft(readByApplication.get(applicationId) as DraftRow | undefined);
     },
     async save(record) {
       writeAttempt.run(`${record.id}:attempt`, record.applicationId, 1, record.disposition, record.createdAt);
@@ -217,6 +234,38 @@ export function createSqliteAuditPort(database: DatabaseSync): AuditPort {
         event.metadata.source.kind,
         event.metadata.source.command
       );
+    }
+  };
+}
+
+export function createApprovalRepository(database: DatabaseSync): ApprovalRepository {
+  interface ApprovalRow {
+    readonly application_id: string;
+    readonly draft_id: string;
+    readonly draft_revision: string;
+    readonly approved_by: string;
+    readonly approved_at: string;
+    readonly expires_at: string;
+  }
+  const read = database.prepare("SELECT * FROM approvals WHERE application_id = ?");
+  const write = database.prepare(`
+    INSERT INTO approvals (application_id, draft_id, draft_revision, approved_by, approved_at, expires_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  return {
+    async getByApplicationId(applicationId) {
+      const row = read.get(applicationId) as ApprovalRow | undefined;
+      return row === undefined ? null : {
+        applicationId: row.application_id,
+        draftId: row.draft_id,
+        draftRevision: row.draft_revision,
+        approvedBy: row.approved_by,
+        approvedAt: row.approved_at,
+        expiresAt: row.expires_at
+      };
+    },
+    async save(record) {
+      write.run(record.applicationId, record.draftId, record.draftRevision, record.approvedBy, record.approvedAt, record.expiresAt);
     }
   };
 }

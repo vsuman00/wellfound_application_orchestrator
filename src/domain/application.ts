@@ -9,6 +9,7 @@ import {
 
 export interface ApplicationRecord {
   readonly id: string;
+  readonly jobId?: string;
   readonly state: ApplicationState;
   readonly confirmedEvidenceId?: string;
 }
@@ -36,10 +37,15 @@ export function transitionApplication(
     const outcome = confirmedOutcome(evidence);
     return {
       id: application.id,
+      ...(application.jobId === undefined ? {} : { jobId: application.jobId }),
       state,
       confirmedEvidenceId: outcome.evidence.evidenceId
     };
   }
 
-  return { id: application.id, state };
+  return {
+    id: application.id,
+    ...(application.jobId === undefined ? {} : { jobId: application.jobId }),
+    state
+  };
 }

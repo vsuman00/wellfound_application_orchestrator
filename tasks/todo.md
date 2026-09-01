@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 PARTIAL; G2/G3 PENDING; NEXT T-016 CLI REVIEW`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 COMPLETE LOCALLY; G2/G3 PENDING; NEXT T-017`
 
 ## T-000: Create isolated planning repository
 
@@ -380,26 +380,28 @@ existing record, attempts/answers/review reasons/audit events commit in one unit
 
 ## T-016: Add explicit application approval
 
-**Status:** Partial; revision-bound approval contract complete, CLI review flow pending.
+**Status:** Complete locally; hosted Windows validation pending.
 
 **Acceptance criteria:**
 
 - [x] Approval targets one stored immutable draft revision and expires on material change.
-- [ ] CLI displays job, company, answers, risks, and exact next action before approval.
-- [ ] Bulk wildcard approval and broad live switches do not exist.
+- [x] CLI displays job, company, answers, risks, and exact next action before approval.
+- [x] Bulk wildcard approval and broad live switches do not exist.
 
-**Verification:** 2 approval unit tests pass as part of the 58-test suite, with lint,
+**Verification:** 2 approval unit tests, 1 approval persistence integration test, and
+CLI argument tests pass as part of the 60-test suite, with lint,
 both typecheck passes, and build green. Revision changes and expiry invalidate approval;
-malformed approval windows fail closed. The review formatter renders job/company,
-answers, risks, and exact next action, and rejects wildcard targets; persisted review
-loading and command wiring remain unimplemented.
+malformed approval windows fail closed. `approve --application-id <id>` loads the stored
+job and draft review; `--confirm` persists one revision-bound approval. Wildcard targets
+and broad live switches are rejected. Hosted Windows evidence remains pending.
 
 **Likely files:** `src/domain/approval.ts`, `src/orchestrator/approve.ts`, `src/cli/approve.ts`, `tests/integration/approval.test.ts`.
 
 **Dependencies:** G3.
 
 **Evidence:** `src/domain/approval.ts`, `src/orchestrator/approve.ts`,
-`tests/unit/approval.test.ts`, and `tests/unit/approve-review.test.ts`.
+`src/cli/approve.ts`, `src/persistence/repositories.ts`, `tests/unit/approval.test.ts`,
+`tests/unit/approve-review.test.ts`, and `tests/integration/approval.test.ts`.
 
 ## T-017: Add single-application submission and confirmation
 
