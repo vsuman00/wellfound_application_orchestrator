@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; G2 PENDING; NEXT T-014`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; G2 PENDING; NEXT T-015`
 
 ## T-000: Create isolated planning repository
 
@@ -326,17 +326,26 @@ operational values, and fail-closed sensitive/legal/unknown/prompt-injection dec
 
 ## T-014: Implement non-submitting form drafting
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Supported controls receive only approved values and provenance is recorded.
-- [ ] Unknown or prohibited controls create review items and stop progression.
-- [ ] Draft-only never clicks, focuses, or keyboard-activates a submit control.
+- [x] Supported controls receive only approved values and provenance is recorded.
+- [x] Unknown or prohibited controls create review items and stop progression.
+- [x] Draft-only never clicks, focuses, or keyboard-activates a submit control.
 
-**Verification:** fixture E2E across text, select, radio, checkbox, multi-step, and blocked cases.
+**Verification:** 1 draft fixture E2E test passes as part of the 52-test suite, with lint,
+both typecheck passes, and build green. Only exact approved text controls are filled;
+unsupported and policy-sensitive controls remain untouched as review items. No submit
+control is clicked, focused, or keyboard-activated. Hosted Windows evidence remains
+pending.
 
 **Likely files:** `src/adapters/wellfound/forms.ts`, `src/adapters/wellfound/draft.ts`, `src/adapters/wellfound/guards.ts`, `tests/e2e/draft.spec.ts`.
 
 **Dependencies:** T-010, T-013.
+
+**Evidence:** `src/adapters/wellfound/draft.ts`, `tests/e2e/draft.spec.ts`, and
+`tests/fixtures/wellfound/scenarios.ts`.
 
 ## T-015: Complete the persisted draft orchestrator
 

@@ -28,7 +28,7 @@ const scenarioContent: Readonly<Record<FixtureScenario, string>> = {
     <main data-fixture-scenario="modal"><button data-open-modal type="button">Open details</button><dialog data-job-modal><p>Sanitized modal content.</p></dialog></main>
   `,
   questions: `
-    <main data-fixture-scenario="questions"><form data-application-form><label>Why this role?<textarea data-question="motivation"></textarea></label><label>Years of experience<input data-question="years" type="number"></label></form></main>
+    <main data-fixture-scenario="questions"><form data-application-form><label>What is your preferred work mode?<input data-question="work-mode" type="text"></label><label>Why this role?<textarea data-question="motivation"></textarea></label><label>What salary do you expect?<input data-question="salary" type="text"></label></form></main>
   `,
   submit: `
     <main data-fixture-scenario="submit"><form data-application-form><input data-question="name" value="Fixture Candidate"><button data-submit type="submit">Submit application</button></form></main>
