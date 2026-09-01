@@ -2,6 +2,7 @@ export type CliResult =
   | { readonly command: "help" }
   | { readonly command: "version" }
   | { readonly command: "setup" }
+  | { readonly command: "scan"; readonly url: string }
   | { readonly command: "error"; readonly message: string };
 
 export function parseArgs(argv: readonly string[]): CliResult {
@@ -30,6 +31,13 @@ export function parseArgs(argv: readonly string[]): CliResult {
     return unexpected === undefined
       ? { command: "setup" }
       : { command: "error", message: `Unexpected argument: ${unexpected}` };
+  }
+
+  if (first === "scan") {
+    if (rest.length !== 2 || rest[0] !== "--url" || rest[1] === undefined) {
+      return { command: "error", message: "scan requires exactly --url <loopback-url>." };
+    }
+    return { command: "scan", url: rest[1] };
   }
 
   return { command: "error", message: `Unknown command: ${first}` };

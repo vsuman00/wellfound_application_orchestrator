@@ -1,6 +1,6 @@
 # Implementation Plan: Wellfound Application Orchestrator
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 PARTIAL`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; G2 PENDING`
 
 ## Overview
 
@@ -149,7 +149,6 @@ The plan was approved for implementation. T-001 through T-011 now provide the
 compilable CLI, managed-browser setup, secure runtime boundaries, immutable domain
 contracts, infrastructure port contracts, the SQLite driver decision, and transactional
 local persistence with lock and recovery primitives, plus persistent managed sessions.
-The local sanitized fixture journeys and scan-only adapter are also in place, and the
-matching policy plus persistence bridge are implemented. T-012 still needs its public
-CLI command; hosted Windows portability and full concurrent-process evidence remain
-open.
+The local sanitized fixture journeys, scan-only adapter, matching policy, persistence
+bridge, and loopback-only `scan` CLI are implemented. G2 remains pending because hosted
+Windows validation is on hold.

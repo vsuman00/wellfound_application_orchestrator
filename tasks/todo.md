@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 PARTIAL; NEXT T-012 CLI`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; NEXT G2`
 
 ## T-000: Create isolated planning repository
 
@@ -275,18 +275,19 @@ browser evidence remains pending.
 
 ## T-012: Implement deterministic matching and persisted scan use case
 
-**Status:** Partial; deterministic policy complete, persistence/CLI bridge pending.
+**Status:** Complete locally; hosted Windows validation pending.
 
 **Acceptance criteria:**
 
 - [x] Criteria produce stable include/exclude/score explanations.
 - [x] Freshness, blocklist, duplicate, and budget rules override scores.
-- [ ] CLI scan persists one normalized record and emits a redacted summary.
+- [x] CLI scan persists one normalized record and emits a redacted summary.
 
-**Verification:** 3 matching-policy unit tests and 1 persisted-scan integration test
-pass as part of the 46-test suite, with lint, both typecheck passes, and build green.
-The policy and repository bridge are deterministic and fail-closed; the public `scan`
-CLI command remains unimplemented.
+**Verification:** 3 matching-policy unit tests, 1 persisted-scan integration test, and
+loopback URL CLI tests pass as part of the 48-test suite, with lint, both typecheck
+passes, and build green. The `scan --url` command rejects live/non-loopback URLs before
+browser startup, persists normalized records outside Git, and emits only counts and
+diagnostic codes. Hosted Windows evidence remains pending.
 
 **Likely files:** `src/policies/matching.ts`, `src/orchestrator/scan.ts`, `src/cli/scan.ts`, `tests/integration/scan.test.ts`.
 
