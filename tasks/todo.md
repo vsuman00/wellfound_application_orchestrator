@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; NEXT T-006`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; NEXT T-008`
 
 ## T-000: Create isolated planning repository
 
@@ -155,17 +155,25 @@ and the hosted-Windows evidence still required.
 
 ## T-007: Add migrations and transactional repositories
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Initial schema stores jobs, drafts, answers, attempts, evidence, schedules, runs, and audit events.
-- [ ] Foreign keys, uniqueness, prepared statements, and transaction rollback are tested.
-- [ ] Runtime database and WAL remain outside the repository.
+- [x] Initial schema stores jobs, drafts, answers, attempts, evidence, schedules, runs, and audit events.
+- [x] Foreign keys, uniqueness, prepared statements, and transaction rollback are tested.
+- [x] Runtime database and WAL remain outside the repository.
 
-**Verification:** fresh migration, rollback-on-error, and repository integration tests.
+**Verification:** 3 persistence integration tests and the full 29-test suite pass, with
+lint, both typecheck passes, and build green. Tests verify fresh migration, foreign keys,
+canonical job uniqueness, prepared application reads/writes, and rollback-on-error.
+The database is created under a temporary external directory and WAL is enabled.
 
 **Likely files:** `src/persistence/database.ts`, `src/persistence/migrations/001-initial.sql`, `src/persistence/repositories.ts`, `tests/integration/persistence.test.ts`.
 
 **Dependencies:** T-006.
+
+**Evidence:** `src/persistence/database.ts`, `src/persistence/migrations/001-initial.sql`,
+`src/persistence/repositories.ts`, and `tests/integration/persistence.test.ts`.
 
 ## T-008: Add idempotency, locks, backup, and crash recovery
 

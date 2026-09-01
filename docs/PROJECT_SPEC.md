@@ -1,6 +1,6 @@
 # Project Specification: Wellfound Application Orchestrator
 
-Status: `IMPLEMENTATION IN PROGRESS; T-006 COMPLETE LOCALLY`
+Status: `IMPLEMENTATION IN PROGRESS; T-007 COMPLETE LOCALLY`
 
 ## Objective
 
