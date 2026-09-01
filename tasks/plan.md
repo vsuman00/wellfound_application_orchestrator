@@ -1,6 +1,6 @@
 # Implementation Plan: Wellfound Application Orchestrator
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 READY`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 READY`
 
 ## Overview
 
@@ -145,9 +145,9 @@ These require separate capability-map revisions and approval.
 
 ## Start point
 
-The plan was approved for implementation. T-001 through T-009 now provide the
+The plan was approved for implementation. T-001 through T-010 now provide the
 compilable CLI, managed-browser setup, secure runtime boundaries, immutable domain
 contracts, infrastructure port contracts, the SQLite driver decision, and transactional
 local persistence with lock and recovery primitives, plus persistent managed sessions.
-T-010 is the next slice; hosted Windows portability and full concurrent-process evidence
-remain open.
+The local sanitized fixture journeys are also in place. T-011 is the next slice; hosted
+Windows portability and full concurrent-process evidence remain open.

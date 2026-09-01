@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; NEXT T-010`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; NEXT T-011`
 
 ## T-000: Create isolated planning repository
 
@@ -229,17 +229,25 @@ are used; hosted Windows browser evidence remains pending.
 
 ## T-010: Build sanitized Wellfound fixture journeys
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Fixtures cover feed, job detail, modal, questions, submit, confirmation, blocked, and changed DOM.
-- [ ] Fixture server is local-only and contains no copied personal or authenticated content.
-- [ ] Browser traces are retained only for fixture failures.
+- [x] Fixtures cover feed, job detail, modal, questions, submit, confirmation, blocked, and changed DOM.
+- [x] Fixture server is local-only and contains no copied personal or authenticated content.
+- [x] Browser traces are retained only for fixture failures.
 
-**Verification:** fixture schema test and Playwright smoke journey.
+**Verification:** the dedicated `npm run test:e2e` smoke suite passes with 2 tests. It
+serves and visits all 8 required scenarios through loopback and asserts that the submit
+fixture has one inert submit control with no POST request. Fixtures contain synthetic
+content only; hosted Windows browser evidence remains pending.
 
 **Likely files:** `tests/fixtures/wellfound/index.html`, `tests/fixtures/wellfound/scenarios.ts`, `tests/e2e/fixture-server.ts`, `tests/e2e/smoke.spec.ts`.
 
 **Dependencies:** T-009.
+
+**Evidence:** `tests/fixtures/wellfound/scenarios.ts`, `tests/e2e/fixture-server.ts`,
+`tests/e2e/smoke.spec.ts`, and `package.json`.
 
 ## T-011: Implement scan-only Wellfound adapter
 
