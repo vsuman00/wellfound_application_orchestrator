@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; NEXT T-002`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; NEXT T-005`
 
 ## T-000: Create isolated planning repository
 
@@ -90,17 +90,25 @@ and runtime paths outside a repository.
 
 ## T-004: Implement domain states and evidence contracts
 
+**Status:** Complete; local evidence passed.
+
 **Acceptance criteria:**
 
-- [ ] Stable domain types and legal transitions match the accepted state machine.
-- [ ] Confirmed outcome construction requires evidence; unknown outcome remains distinct.
-- [ ] Quota semantics count confirmed successes only.
+- [x] Stable domain types and legal transitions match the accepted state machine.
+- [x] Confirmed outcome construction requires evidence; unknown outcome remains distinct.
+- [x] Quota semantics count confirmed successes only.
 
-**Verification:** exhaustive transition and outcome unit tests.
+**Verification:** 5 focused domain tests and the full 24-test suite pass, with lint,
+both typecheck passes, and build green. Tests cover the safe progression, retryable and
+unknown recovery paths, terminal states, evidence validation, and confirmed-only quota
+counting.
 
 **Likely files:** `src/domain/application.ts`, `src/domain/outcome.ts`, `src/domain/state-machine.ts`, `tests/unit/state-machine.test.ts`.
 
 **Dependencies:** T-001.
+
+**Evidence:** `src/domain/state-machine.ts`, `src/domain/outcome.ts`,
+`src/domain/application.ts`, and `tests/unit/domain.test.ts`.
 
 ## T-005: Define audit and repository ports
 
