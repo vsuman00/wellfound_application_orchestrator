@@ -1,6 +1,6 @@
 # Spec: answer-policy
 
-Status: `READY FOR REVIEW`
+Status: `IMPLEMENTED LOCALLY; WINDOWS VALIDATION ON HOLD`
 
 ## Objective
 

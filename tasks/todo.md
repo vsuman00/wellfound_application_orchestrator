@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; NEXT G2`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; G2 PENDING; NEXT T-014`
 
 ## T-000: Create isolated planning repository
 
@@ -305,17 +305,24 @@ diagnostic codes. Hosted Windows evidence remains pending.
 
 ## T-013: Implement answer classification and fact provenance
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Exact approved facts, review-required, prohibited, and unsupported decisions are distinct.
-- [ ] Sensitive/legal/unknown questions and adversarial job text fail closed.
-- [ ] Compensation, relocation, sponsorship, and availability require explicit values.
+- [x] Exact approved facts, review-required, prohibited, and unsupported decisions are distinct.
+- [x] Sensitive/legal/unknown questions and adversarial job text fail closed.
+- [x] Compensation, relocation, sponsorship, and availability require explicit values.
 
-**Verification:** exhaustive answer-policy and prompt-injection-shaped unit fixtures.
+**Verification:** 3 answer-policy unit tests pass as part of the 51-test suite, with lint,
+both typecheck passes, and build green. Tests prove approved-fact provenance, explicit
+operational values, and fail-closed sensitive/legal/unknown/prompt-injection decisions.
 
 **Likely files:** `src/policies/questions.ts`, `src/policies/answers.ts`, `src/domain/answer.ts`, `tests/unit/answer-policy.test.ts`.
 
 **Dependencies:** T-003, T-004.
+
+**Evidence:** `src/domain/answer.ts`, `src/policies/questions.ts`,
+`src/policies/answers.ts`, and `tests/unit/answer-policy.test.ts`.
 
 ## T-014: Implement non-submitting form drafting
 
