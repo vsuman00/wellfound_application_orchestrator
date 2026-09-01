@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 COMPLETE LOCALLY; T-017 COMPLETE LOCALLY; G2/G3 PENDING; NEXT T-018 CONTROLLED PILOT`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 COMPLETE LOCALLY; T-017 COMPLETE LOCALLY; T-018 PREPARED; G2/G3/G4 PENDING; NEXT: OPERATOR-SUPPLIED PILOT TARGET`
 
 ## T-000: Create isolated planning repository
 
@@ -433,13 +433,18 @@ the live pilot remain pending.
 
 ## T-018: Run a controlled live pilot
 
+**Status:** Prepared; execution blocked pending one explicit application target and a
+dedicated authenticated pilot session.
+
 **Acceptance criteria:**
 
 - [ ] Human selects and approves one known application after dry-run review.
 - [ ] Live evidence is redacted and confirms exactly one outcome.
 - [ ] Any verification page, unexpected form, or ambiguity stops without retry.
 
-**Verification:** signed pilot checklist and sanitized run/evidence report; never CI.
+**Verification:** `docs/pilots/G4-live-pilot.md` and `docs/pilots/G4-result.md` are
+prepared for a signed, sanitized report; no live run has been performed and this work
+is never CI.
 
 **Likely files:** `docs/pilots/G4-live-pilot.md`, `docs/pilots/G4-result.md`.
 
