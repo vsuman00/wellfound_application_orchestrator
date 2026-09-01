@@ -31,7 +31,7 @@ const scenarioContent: Readonly<Record<FixtureScenario, string>> = {
     <main data-fixture-scenario="questions"><form data-application-form><label>What is your preferred work mode?<input data-question="work-mode" type="text"></label><label>Why this role?<textarea data-question="motivation"></textarea></label><label>What salary do you expect?<input data-question="salary" type="text"></label></form></main>
   `,
   submit: `
-    <main data-fixture-scenario="submit"><form data-application-form><input data-question="name" value="Fixture Candidate"><button data-submit type="submit">Submit application</button></form></main>
+    <main data-fixture-scenario="submit"><form data-application-form><input data-question="name" value="Fixture Candidate"><button data-submit type="submit">Submit application</button></form><script>document.querySelector('form').addEventListener('submit', function(event) { event.preventDefault(); window.location.href = '/scenario/confirmation'; });</script></main>
   `,
   confirmation: `
     <main data-fixture-scenario="confirmation"><h1 data-confirmation>Application received</h1><p data-confirmation-id>fixture-confirmation-1</p></main>

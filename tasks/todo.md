@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 COMPLETE LOCALLY; G2/G3 PENDING; NEXT T-017`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 COMPLETE LOCALLY; T-017 PARTIAL; G2/G3 PENDING; NEXT T-017 ORCHESTRATOR`
 
 ## T-000: Create isolated planning repository
 
@@ -405,17 +405,26 @@ and broad live switches are rejected. Hosted Windows evidence remains pending.
 
 ## T-017: Add single-application submission and confirmation
 
+**Status:** Partial; fixture adapter and confirmation evidence complete, orchestrator/CLI pending.
+
 **Acceptance criteria:**
 
 - [ ] Submit command accepts one approved application id and reacquires locks/quotas.
-- [ ] Verified fixture confirmation creates evidence and confirmed state exactly once.
-- [ ] Timeout, navigation loss, changed DOM, or ambiguous response creates outcome-unknown.
+- [x] Verified fixture confirmation creates evidence and confirmed state exactly once.
+- [x] Timeout, navigation loss, changed DOM, or ambiguous response creates outcome-unknown.
 
-**Verification:** fixture submit/confirm/failure E2E and duplicate invocation integration tests.
+**Verification:** 2 fixture submission E2E tests pass as part of the 62-test suite, with
+lint, both typecheck passes, and build green. The adapter requires a valid single-app
+approval, limits execution to loopback fixtures, captures confirmation evidence, and
+rejects expired approvals before clicking. Persistence-backed state transition, locks,
+quotas, and the public submit command remain unimplemented.
 
 **Likely files:** `src/adapters/wellfound/submit.ts`, `src/adapters/wellfound/confirm.ts`, `src/orchestrator/submit.ts`, `tests/e2e/submit.spec.ts`.
 
 **Dependencies:** T-016, T-008.
+
+**Evidence:** `src/adapters/wellfound/submit.ts`, `src/adapters/wellfound/confirm.ts`,
+`tests/e2e/submit.spec.ts`, and `tests/fixtures/wellfound/scenarios.ts`.
 
 ## T-018: Run a controlled live pilot
 
