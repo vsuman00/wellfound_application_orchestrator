@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; G2/G3 PENDING; NEXT T-016`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; T-016 PARTIAL; G2/G3 PENDING; NEXT T-016 CLI REVIEW`
 
 ## T-000: Create isolated planning repository
 
@@ -380,17 +380,24 @@ existing record, attempts/answers/review reasons/audit events commit in one unit
 
 ## T-016: Add explicit application approval
 
+**Status:** Partial; revision-bound approval contract complete, CLI review flow pending.
+
 **Acceptance criteria:**
 
-- [ ] Approval targets one stored immutable draft revision and expires on material change.
+- [x] Approval targets one stored immutable draft revision and expires on material change.
 - [ ] CLI displays job, company, answers, risks, and exact next action before approval.
 - [ ] Bulk wildcard approval and broad live switches do not exist.
 
-**Verification:** approval revision, expiry, cancellation, and tampering tests.
+**Verification:** 2 approval unit tests pass as part of the 56-test suite, with lint,
+both typecheck passes, and build green. Revision changes and expiry invalidate approval;
+malformed approval windows fail closed. The CLI display/confirmation flow remains
+unimplemented.
 
 **Likely files:** `src/domain/approval.ts`, `src/orchestrator/approve.ts`, `src/cli/approve.ts`, `tests/integration/approval.test.ts`.
 
 **Dependencies:** G3.
+
+**Evidence:** `src/domain/approval.ts` and `tests/unit/approval.test.ts`.
 
 ## T-017: Add single-application submission and confirmation
 
