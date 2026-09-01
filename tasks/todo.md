@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; G2 PENDING; NEXT T-015`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 PARTIAL; G2 PENDING; NEXT T-015 SCAN ORCHESTRATION`
 
 ## T-000: Create isolated planning repository
 
@@ -349,17 +349,27 @@ pending.
 
 ## T-015: Complete the persisted draft orchestrator
 
+**Status:** Partial; transactional persistence and summary complete, scan orchestration pending.
+
 **Acceptance criteria:**
 
 - [ ] Scan→match→draft/review journey is idempotent and restart-safe.
-- [ ] Attempts, answers, review reasons, and audit events commit transactionally.
-- [ ] Run summary separates drafted, review-required, skipped, and failed jobs.
+- [x] Attempts, answers, review reasons, and audit events commit transactionally.
+- [x] Run summary separates drafted, review-required, skipped, and failed jobs.
 
-**Verification:** port-fake plus fixture-backed orchestration integration tests.
+**Verification:** the draft-run integration test passes as part of the 53-test suite,
+with lint, both typecheck passes, and build green. Idempotent draft keys return the
+existing record, attempts/answers/review reasons/audit events commit in one unit of
+work, and summaries keep drafted/review/skipped/failed counts separate. A single
+scan-to-match-to-draft coordinator remains to be implemented.
 
 **Likely files:** `src/orchestrator/draft.ts`, `src/orchestrator/run-summary.ts`, `src/cli/draft.ts`, `tests/integration/draft-run.test.ts`.
 
 **Dependencies:** T-012, T-014, T-008.
+
+**Evidence:** `src/domain/draft.ts`, `src/orchestrator/draft.ts`,
+`src/orchestrator/run-summary.ts`, `src/persistence/repositories.ts`, and
+`tests/integration/draft-run.test.ts`.
 
 ## Checkpoint G3: Draft-only
 

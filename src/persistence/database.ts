@@ -3,7 +3,7 @@ import { dirname } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 export const INITIAL_SCHEMA_VERSION = 1;
-export const LATEST_SCHEMA_VERSION = 3;
+export const LATEST_SCHEMA_VERSION = 4;
 
 export const INITIAL_SCHEMA = `
 CREATE TABLE jobs (
@@ -107,6 +107,15 @@ ALTER TABLE jobs ADD COLUMN skills_json TEXT NOT NULL DEFAULT '[]';
 ALTER TABLE jobs ADD COLUMN published_at TEXT NOT NULL DEFAULT '';
 `;
 
+export const FOURTH_SCHEMA = `
+ALTER TABLE drafts ADD COLUMN idempotency_key TEXT;
+ALTER TABLE drafts ADD COLUMN disposition TEXT NOT NULL DEFAULT 'drafted';
+ALTER TABLE drafts ADD COLUMN review_reasons_json TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE answers ADD COLUMN fact_id TEXT;
+ALTER TABLE answers ADD COLUMN reason TEXT;
+CREATE UNIQUE INDEX drafts_idempotency_key ON drafts(idempotency_key) WHERE idempotency_key IS NOT NULL;
+`;
+
 export function openDatabase(databasePath: string): DatabaseSync {
   mkdirSync(dirname(databasePath), { recursive: true });
   const database = new DatabaseSync(databasePath, {
@@ -136,7 +145,8 @@ function migrate(database: DatabaseSync): void {
   const migrations: ReadonlyArray<readonly [number, string]> = [
     [INITIAL_SCHEMA_VERSION, INITIAL_SCHEMA],
     [2, SECOND_SCHEMA],
-    [3, THIRD_SCHEMA]
+    [3, THIRD_SCHEMA],
+    [4, FOURTH_SCHEMA]
   ];
   for (const [version, sql] of migrations) {
     if (version <= latestVersion) {

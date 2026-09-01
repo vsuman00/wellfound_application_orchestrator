@@ -1,6 +1,7 @@
 import type { AuditEvent } from "./audit.js";
 import type { ApplicationRecord } from "./application.js";
 import type { JobRecord } from "./job.js";
+import type { DraftRecord } from "./draft.js";
 
 export interface ApplicationRepository {
   getById(id: string): Promise<ApplicationRecord | null>;
@@ -10,6 +11,11 @@ export interface ApplicationRepository {
 export interface JobRepository {
   getByCanonicalIdentity(identity: string): Promise<JobRecord | null>;
   upsert(record: JobRecord): Promise<void>;
+}
+
+export interface DraftRepository {
+  getByIdempotencyKey(key: string): Promise<DraftRecord | null>;
+  save(record: DraftRecord): Promise<void>;
 }
 
 export interface AuditPort {
