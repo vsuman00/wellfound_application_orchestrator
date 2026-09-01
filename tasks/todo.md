@@ -134,17 +134,24 @@ identifier, lock, and unit-of-work contracts.
 
 ## T-006: Select the SQLite driver through a portability spike
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Candidate drivers are compared for Node 24 status, macOS/Windows installation, transactions, WAL, backup, and maintenance.
+- [x] Candidate drivers are compared for Node 24 status, macOS/Windows installation, transactions, WAL, backup, and maintenance.
 - [ ] The chosen driver passes the same focused test on both CI platforms.
-- [ ] The decision and exact version are recorded before schema code is written.
+- [x] The decision and exact version are recorded before schema code is written.
 
-**Verification:** CI spike plus an ADR with command output and limitations.
+**Verification:** `node --test spikes/sqlite/test.mjs` passes on macOS arm64 with
+Node `v26.5.0`; the ADR records the built-in `node:sqlite` decision, candidate tradeoffs,
+and the hosted-Windows evidence still required.
 
 **Likely files:** `docs/architecture/ADR-001-sqlite-driver.md`, `spikes/sqlite/package.json`, `spikes/sqlite/test.mjs`.
 
 **Dependencies:** T-001, T-005.
+
+**Evidence:** `spikes/sqlite/package.json`, `spikes/sqlite/test.mjs`, and
+`docs/architecture/ADR-001-sqlite-driver.md`.
 
 ## T-007: Add migrations and transactional repositories
 

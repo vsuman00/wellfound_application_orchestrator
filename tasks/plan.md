@@ -1,6 +1,6 @@
 # Implementation Plan: Wellfound Application Orchestrator
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 READY`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 READY`
 
 ## Overview
 
@@ -145,6 +145,7 @@ These require separate capability-map revisions and approval.
 
 ## Start point
 
-The plan was approved for implementation. T-001 through T-005 now provide the
+The plan was approved for implementation. T-001 through T-006 now provide the
 compilable CLI, managed-browser setup, secure runtime boundaries, immutable domain
-contracts, and infrastructure port contracts. T-006 is the next slice.
+contracts, infrastructure port contracts, and the SQLite driver decision. T-007 is the
+next slice; hosted Windows portability evidence remains open for the spike.
