@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; NEXT T-005`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; NEXT T-006`
 
 ## T-000: Create isolated planning repository
 
@@ -112,17 +112,25 @@ counting.
 
 ## T-005: Define audit and repository ports
 
+**Status:** Complete; local evidence passed.
+
 **Acceptance criteria:**
 
-- [ ] Repository, unit-of-work, lock, audit, clock, and identifier ports contain no implementation imports.
-- [ ] Commands carry deterministic idempotency keys and redacted actor/source metadata.
-- [ ] Port fakes can exercise a complete scan-to-draft transition.
+- [x] Repository, unit-of-work, lock, audit, clock, and identifier ports contain no implementation imports.
+- [x] Commands carry deterministic idempotency keys and redacted actor/source metadata.
+- [x] Port fakes can exercise a complete scan-to-draft transition.
 
-**Verification:** compile-time contract tests and a port-fake unit journey.
+**Verification:** 2 focused port-contract tests and the full 26-test suite pass, with
+lint, both typecheck passes, and build green. The fake journey persists an application,
+records state-change audit events, verifies idempotency metadata, and exercises clock,
+identifier, lock, and unit-of-work contracts.
 
 **Likely files:** `src/domain/ports.ts`, `src/domain/audit.ts`, `tests/unit/ports.test.ts`.
 
 **Dependencies:** T-003, T-004.
+
+**Evidence:** `src/domain/audit.ts`, `src/domain/ports.ts`, and
+`tests/unit/ports.test.ts`.
 
 ## T-006: Select the SQLite driver through a portability spike
 
