@@ -388,16 +388,18 @@ existing record, attempts/answers/review reasons/audit events commit in one unit
 - [ ] CLI displays job, company, answers, risks, and exact next action before approval.
 - [ ] Bulk wildcard approval and broad live switches do not exist.
 
-**Verification:** 2 approval unit tests pass as part of the 56-test suite, with lint,
+**Verification:** 2 approval unit tests pass as part of the 58-test suite, with lint,
 both typecheck passes, and build green. Revision changes and expiry invalidate approval;
-malformed approval windows fail closed. The CLI display/confirmation flow remains
-unimplemented.
+malformed approval windows fail closed. The review formatter renders job/company,
+answers, risks, and exact next action, and rejects wildcard targets; persisted review
+loading and command wiring remain unimplemented.
 
 **Likely files:** `src/domain/approval.ts`, `src/orchestrator/approve.ts`, `src/cli/approve.ts`, `tests/integration/approval.test.ts`.
 
 **Dependencies:** G3.
 
-**Evidence:** `src/domain/approval.ts` and `tests/unit/approval.test.ts`.
+**Evidence:** `src/domain/approval.ts`, `src/orchestrator/approve.ts`,
+`tests/unit/approval.test.ts`, and `tests/unit/approve-review.test.ts`.
 
 ## T-017: Add single-application submission and confirmation
 
