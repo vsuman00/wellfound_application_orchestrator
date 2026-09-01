@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; NEXT G1`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; NEXT T-010`
 
 ## T-000: Create isolated planning repository
 
@@ -207,17 +207,25 @@ The full concurrent-process and forced-crash matrix remains a hosted Windows/G1 
 
 ## T-009: Implement persistent managed-browser sessions
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] One-time headed login stores only the local managed profile.
-- [ ] Session health reports ready, logged-out, verification-required, locked, or corrupt.
-- [ ] Browser shutdown and profile locks are reliable after cancellation or crash.
+- [x] One-time headed login stores only the local managed profile.
+- [x] Session health reports ready, logged-out, verification-required, locked, or corrupt.
+- [x] Browser shutdown and profile locks are reliable after cancellation or crash.
 
-**Verification:** local fixture login persistence and failure-path integration tests.
+**Verification:** 3 session-health unit tests and a persistent local-fixture browser
+integration test pass. The test writes a synthetic local session marker, closes the
+managed context, reopens it, and reads the marker back. No live origin or credentials
+are used; hosted Windows browser evidence remains pending.
 
 **Likely files:** `src/browser/provider.ts`, `src/browser/session.ts`, `src/cli/login.ts`, `tests/integration/browser-session.test.ts`.
 
 **Dependencies:** G1, T-002, T-003.
+
+**Evidence:** `src/browser/session.ts`, `tests/unit/browser-session.test.ts`, and
+`tests/integration/browser-session.test.ts`.
 
 ## T-010: Build sanitized Wellfound fixture journeys
 

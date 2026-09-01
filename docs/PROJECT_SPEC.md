@@ -1,6 +1,6 @@
 # Project Specification: Wellfound Application Orchestrator
 
-Status: `IMPLEMENTATION IN PROGRESS; T-008 COMPLETE LOCALLY; G1 PENDING`
+Status: `IMPLEMENTATION IN PROGRESS; T-009 COMPLETE LOCALLY; WINDOWS VALIDATION ON HOLD`
 
 ## Objective
 
