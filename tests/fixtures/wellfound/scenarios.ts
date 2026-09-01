@@ -15,8 +15,9 @@ const scenarioContent: Readonly<Record<FixtureScenario, string>> = {
   feed: `
     <main data-fixture-scenario="feed">
       <section data-job-feed>
-        <article data-job-card data-job-id="fixture-job-1"><a data-job-link href="/scenario/job-detail">Fixture Engineer</a><span data-company>Example Labs</span><span data-location>Remote</span></article>
-        <article data-job-card data-job-id="fixture-job-2"><a data-job-link href="/scenario/job-detail">Fixture Product Engineer</a><span data-company>Sample Systems</span><span data-location>Remote</span></article>
+        <article data-job-card data-job-id="fixture-job-1"><a data-job-link data-job-title href="/scenario/job-detail">Fixture Engineer</a><span data-company>Example Labs</span><span data-location>Remote</span></article>
+        <article data-job-card data-job-id="fixture-job-2"><a data-job-link data-job-title href="/scenario/job-detail">Fixture Product Engineer</a><span data-company>Sample Systems</span><span data-location>Remote</span></article>
+        <article data-job-card data-job-id="fixture-job-1"><a data-job-link data-job-title href="/scenario/job-detail">Fixture Engineer</a><span data-company>Example Labs</span><span data-location>Remote</span></article>
       </section>
     </main>
   `,

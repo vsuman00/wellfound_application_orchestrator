@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; NEXT T-011`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; NEXT T-012`
 
 ## T-000: Create isolated planning repository
 
@@ -251,17 +251,27 @@ content only; hosted Windows browser evidence remains pending.
 
 ## T-011: Implement scan-only Wellfound adapter
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Adapter extracts canonical job identity and normalized job facts from fixtures.
-- [ ] Pagination/scroll terminates deterministically and deduplicates results.
-- [ ] Changed DOM, CAPTCHA-like, and missing-field scenarios stop with typed diagnostics.
+- [x] Adapter extracts canonical job identity and normalized job facts from fixtures.
+- [x] Pagination/scroll terminates deterministically and deduplicates results.
+- [x] Changed DOM, CAPTCHA-like, and missing-field scenarios stop with typed diagnostics.
 
-**Verification:** scan-only fixture E2E and zero form/submit interaction assertion.
+**Verification:** 2 scan fixture E2E tests and 2 normalization unit tests pass as part of
+the 42-test suite, with lint, both typecheck passes, and build green. The adapter reads
+only data attributes/text, deduplicates repeated canonical identities, and returns typed
+blocked/changed-DOM/missing-field diagnostics without form interaction. Hosted Windows
+browser evidence remains pending.
 
 **Likely files:** `src/adapters/wellfound/locators.ts`, `src/adapters/wellfound/scan.ts`, `src/adapters/wellfound/normalize.ts`, `tests/e2e/scan.spec.ts`.
 
 **Dependencies:** T-010, T-005.
+
+**Evidence:** `src/adapters/wellfound/locators.ts`, `src/adapters/wellfound/normalize.ts`,
+`src/adapters/wellfound/scan.ts`, `tests/unit/normalize.test.ts`, and
+`tests/e2e/scan.spec.ts`.
 
 ## T-012: Implement deterministic matching and persisted scan use case
 
