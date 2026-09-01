@@ -33,6 +33,9 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Install and launch managed Chromium
+        run: npm run setup
+
       - name: Lint
         run: npm run lint
 
@@ -44,6 +47,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Install and launch managed Chromium
-        run: npm run setup
