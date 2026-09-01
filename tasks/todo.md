@@ -67,17 +67,26 @@ handled by the CLI), `tests/unit/browser-install.test.ts`, `package.json`,
 
 ## T-003: Establish secure paths, redaction, and configuration
 
+**Status:** Complete; local evidence passed.
+
 **Acceptance criteria:**
 
-- [ ] Runtime paths resolve outside Git on both platforms.
-- [ ] Versioned configuration validates before side effects and defaults to draft-only.
-- [ ] Redaction removes credentials, PII, cookies, and application text from errors/logs.
+- [x] Runtime paths resolve outside Git on both platforms.
+- [x] Versioned configuration validates before side effects and defaults to draft-only.
+- [x] Redaction removes credentials, PII, cookies, and application text from errors/logs.
 
-**Verification:** unit tests for path matrix, invalid config, and representative leaks.
+**Verification:** 9 focused configuration/redaction tests and the full 19-test suite
+pass, with lint, both typecheck passes, and build green. Tests prove safe defaults,
+invalid timezone/mode/quota/raw-key rejection, secret/email/token/cookie redaction,
+and runtime paths outside a repository.
 
 **Likely files:** `src/config/schema.ts`, `src/config/paths.ts`, `src/security/redactor.ts`, `tests/unit/config.test.ts`.
 
 **Dependencies:** T-001.
+
+**Evidence:** `src/config/schema.ts`, `src/config/paths.ts`,
+`src/security/redactor.ts`, `tests/unit/config.test.ts`, and
+`tests/unit/redactor.test.ts`.
 
 ## T-004: Implement domain states and evidence contracts
 
