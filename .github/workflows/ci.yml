@@ -44,3 +44,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Install and launch managed Chromium
+        run: npm run setup

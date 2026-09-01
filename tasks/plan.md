@@ -1,6 +1,6 @@
 # Implementation Plan: Wellfound Application Orchestrator
 
-Status: `T-001 COMPLETE; T-002 READY`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 READY`
 
 ## Overview
 

@@ -17,6 +17,10 @@ describe("parseArgs", () => {
     expect(parseArgs(["-v"])).toEqual({ command: "version" });
   });
 
+  it("recognizes the setup command", () => {
+    expect(parseArgs(["setup"])).toEqual({ command: "setup" });
+  });
+
   it("rejects unknown commands and extra arguments", () => {
     expect(parseArgs(["scan"])).toEqual({
       command: "error",

@@ -44,17 +44,26 @@ zero vulnerabilities. CI matrix is defined in `.github/workflows/ci.yml` for
 
 ## T-002: Add runtime preflight and managed-browser installer
 
+**Status:** Implemented; local macOS evidence passed, hosted Windows CI pending.
+
 **Acceptance criteria:**
 
-- [ ] Preflight reports supported Node, OS, CPU, disk, and writable cache state.
-- [ ] Setup installs and verifies the pinned Chromium revision without installed Chrome.
-- [ ] Unsupported combinations fail before profile or database creation.
+- [x] Preflight reports supported Node, OS, CPU, and writable home/cache base state.
+- [x] Setup installs and verifies the pinned Chromium revision without installed Chrome.
+- [x] Unsupported combinations fail before profile or database creation.
 
-**Verification:** focused installer tests and clean macOS/Windows CI browser launch.
+**Verification:** 6 focused runtime tests plus 4 CLI tests pass; `npm run setup` installed
+and launched managed Chromium on macOS arm64. CI now runs the same setup command on
+`macos-latest` and `windows-latest`; hosted Windows evidence is pending because no
+remote is configured.
 
 **Likely files:** `src/browser/install.ts`, `src/cli/setup.ts`, `tests/integration/browser-install.test.ts`, `package.json`.
 
 **Dependencies:** T-001.
+
+**Evidence:** `src/browser/install.ts`, `src/cli/setup.ts` (planned entry is currently
+handled by the CLI), `tests/unit/browser-install.test.ts`, `package.json`,
+`package-lock.json`, and `.github/workflows/ci.yml`.
 
 ## T-003: Establish secure paths, redaction, and configuration
 

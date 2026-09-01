@@ -1,6 +1,7 @@
 export type CliResult =
   | { readonly command: "help" }
   | { readonly command: "version" }
+  | { readonly command: "setup" }
   | { readonly command: "error"; readonly message: string };
 
 export function parseArgs(argv: readonly string[]): CliResult {
@@ -21,6 +22,13 @@ export function parseArgs(argv: readonly string[]): CliResult {
     const unexpected = rest[0];
     return unexpected === undefined
       ? { command: "version" }
+      : { command: "error", message: `Unexpected argument: ${unexpected}` };
+  }
+
+  if (first === "setup") {
+    const unexpected = rest[0];
+    return unexpected === undefined
+      ? { command: "setup" }
       : { command: "error", message: `Unexpected argument: ${unexpected}` };
   }
 

@@ -40,7 +40,9 @@ npm run schedule
 npm run doctor
 ```
 
-These commands are contracts, not working features yet.
+The `setup`, `build`, `typecheck`, `lint`, `test`, and foundation CLI commands are
+implemented. Browser login, scanning, drafting, scheduling, and submission remain
+future tasks.
 
 ## Start here
 
