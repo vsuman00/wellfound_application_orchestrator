@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 PARTIAL; G2 PENDING; NEXT T-015 SCAN ORCHESTRATION`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; T-009 COMPLETE LOCALLY; T-010 COMPLETE LOCALLY; T-011 COMPLETE LOCALLY; T-012 COMPLETE LOCALLY; T-013 COMPLETE LOCALLY; T-014 COMPLETE LOCALLY; T-015 COMPLETE LOCALLY; G2/G3 PENDING; NEXT T-016`
 
 ## T-000: Create isolated planning repository
 
@@ -349,19 +349,20 @@ pending.
 
 ## T-015: Complete the persisted draft orchestrator
 
-**Status:** Partial; transactional persistence and summary complete, scan orchestration pending.
+**Status:** Complete locally; hosted Windows validation pending.
 
 **Acceptance criteria:**
 
-- [ ] Scan→match→draft/review journey is idempotent and restart-safe.
+- [x] Scan→match→draft/review journey is idempotent and restart-safe.
 - [x] Attempts, answers, review reasons, and audit events commit transactionally.
 - [x] Run summary separates drafted, review-required, skipped, and failed jobs.
 
-**Verification:** the draft-run integration test passes as part of the 53-test suite,
+**Verification:** 2 draft-run integration tests pass as part of the 54-test suite,
 with lint, both typecheck passes, and build green. Idempotent draft keys return the
 existing record, attempts/answers/review reasons/audit events commit in one unit of
-work, and summaries keep drafted/review/skipped/failed counts separate. A single
-scan-to-match-to-draft coordinator remains to be implemented.
+  work, and summaries keep drafted/review/skipped/failed counts separate. The coordinator
+  injects discovery, matching, and drafting ports, so no browser or live-site behavior is
+  embedded in the persistence layer. Hosted Windows evidence remains pending.
 
 **Likely files:** `src/orchestrator/draft.ts`, `src/orchestrator/run-summary.ts`, `src/cli/draft.ts`, `tests/integration/draft-run.test.ts`.
 

@@ -1,6 +1,7 @@
 import type { AuditPort, ApplicationRepository, Clock, DraftRepository, UnitOfWork } from "../domain/ports.js";
 import type { ApplicationRecord } from "../domain/application.js";
 import type { DraftRecord } from "../domain/draft.js";
+import { summarizeDraftRun, type DraftRunSummary } from "./run-summary.js";
 
 export interface DraftPersistence {
   readonly applications: ApplicationRepository;
@@ -44,4 +45,33 @@ export async function persistDraft(
     });
     return { status: "created", record: draft };
   });
+}
+
+export interface DraftJourneyCandidate {
+  readonly application: ApplicationRecord;
+  readonly identity: string;
+}
+
+export interface DraftJourneyDependencies extends DraftPersistence {
+  readonly discover: () => Promise<readonly DraftJourneyCandidate[]>;
+  readonly match: (candidate: DraftJourneyCandidate) => Promise<boolean>;
+  readonly draft: (candidate: DraftJourneyCandidate) => Promise<DraftRecord>;
+}
+
+export async function runDraftJourney(dependencies: DraftJourneyDependencies): Promise<DraftRunSummary> {
+  const dispositions: DraftRecord["disposition"][] = [];
+  for (const candidate of await dependencies.discover()) {
+    if (!(await dependencies.match(candidate))) {
+      dispositions.push("skipped");
+      continue;
+    }
+    try {
+      const draft = await dependencies.draft(candidate);
+      const result = await persistDraft(candidate.application, draft, dependencies);
+      dispositions.push(result.record.disposition);
+    } catch {
+      dispositions.push("failed");
+    }
+  }
+  return summarizeDraftRun(dispositions);
 }

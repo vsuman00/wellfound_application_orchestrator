@@ -6,7 +6,7 @@ import { createApplication, transitionApplication } from "../../src/domain/appli
 import type { DraftRecord } from "../../src/domain/draft.js";
 import { openDatabase, closeDatabase } from "../../src/persistence/database.js";
 import { createApplicationRepository, createDraftRepository, createSqliteAuditPort, createSqliteUnitOfWork } from "../../src/persistence/repositories.js";
-import { persistDraft } from "../../src/orchestrator/draft.js";
+import { persistDraft, runDraftJourney } from "../../src/orchestrator/draft.js";
 import { summarizeDraftRun } from "../../src/orchestrator/run-summary.js";
 
 const temporaryDirectories: string[] = [];
@@ -51,6 +51,40 @@ describe("persisted draft orchestrator", () => {
       expect(database.prepare("SELECT COUNT(*) AS count FROM application_attempts").get()?.count).toBe(1);
       expect(database.prepare("SELECT COUNT(*) AS count FROM audit_events").get()?.count).toBe(1);
       expect(summarizeDraftRun(["drafted", "review-required", "skipped", "failed"])).toEqual({ drafted: 1, reviewRequired: 1, skipped: 1, failed: 1 });
+    } finally {
+      closeDatabase(database);
+    }
+  });
+
+  it("restarts a scan-to-match-to-draft journey without duplicate writes", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "wellfound-draft-journey-"));
+    temporaryDirectories.push(directory);
+    const database = openDatabase(join(directory, "state.sqlite3"));
+    try {
+      const application = createApplication("application-journey");
+      const draft: DraftRecord = {
+        id: "draft-journey",
+        applicationId: application.id,
+        idempotencyKey: "draft:journey:1",
+        disposition: "drafted",
+        answers: [],
+        reviewReasons: [],
+        createdAt: "2026-09-01T10:00:00.000Z"
+      };
+      const persistence = {
+        applications: createApplicationRepository(database),
+        drafts: createDraftRepository(database),
+        audit: createSqliteAuditPort(database),
+        unitOfWork: createSqliteUnitOfWork(database),
+        clock: { now: () => "2026-09-01T10:00:00.000Z" },
+        discover: async () => [{ application, identity: "wellfound:journey-1" }],
+        match: async () => true,
+        draft: async () => draft
+      };
+      await expect(runDraftJourney(persistence)).resolves.toEqual({ drafted: 1, reviewRequired: 0, skipped: 0, failed: 0 });
+      await expect(runDraftJourney(persistence)).resolves.toEqual({ drafted: 1, reviewRequired: 0, skipped: 0, failed: 0 });
+      expect(database.prepare("SELECT COUNT(*) AS count FROM drafts").get()?.count).toBe(1);
+      expect(database.prepare("SELECT COUNT(*) AS count FROM application_attempts").get()?.count).toBe(1);
     } finally {
       closeDatabase(database);
     }
