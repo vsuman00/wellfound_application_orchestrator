@@ -3,6 +3,7 @@ import type { ApplicationRecord } from "./application.js";
 import type { JobRecord } from "./job.js";
 import type { DraftRecord } from "./draft.js";
 import type { ApprovalRecord } from "./approval.js";
+import type { ConfirmationEvidence, SubmissionOutcome } from "./outcome.js";
 
 export interface ApplicationRepository {
   getById(id: string): Promise<ApplicationRecord | null>;
@@ -24,6 +25,42 @@ export interface DraftRepository {
 export interface ApprovalRepository {
   getByApplicationId(applicationId: string): Promise<ApprovalRecord | null>;
   save(record: ApprovalRecord): Promise<void>;
+}
+
+export interface SubmissionAttempt {
+  readonly id: string;
+  readonly applicationId: string;
+  readonly attemptNumber: number;
+  readonly runId?: string;
+  readonly outcome: SubmissionOutcome;
+  readonly createdAt: string;
+}
+
+export interface SubmissionRepository {
+  nextAttemptNumber(applicationId: string): Promise<number>;
+  saveEvidence(applicationId: string, evidence: ConfirmationEvidence): Promise<void>;
+  saveAttempt(attempt: SubmissionAttempt): Promise<void>;
+}
+
+export interface QuotaLimits {
+  readonly perRun: number;
+  readonly perDay: number;
+}
+
+export interface QuotaLease {
+  readonly applicationId: string;
+  readonly runId: string;
+}
+
+export interface QuotaPort {
+  acquire(input: {
+    readonly applicationId: string;
+    readonly runId: string;
+    readonly limits: QuotaLimits;
+    readonly now: string;
+  }): Promise<QuotaLease | null>;
+  consume(lease: QuotaLease): Promise<void>;
+  release(lease: QuotaLease): Promise<void>;
 }
 
 export interface AuditPort {

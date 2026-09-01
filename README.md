@@ -5,12 +5,12 @@ automation. It is intentionally separate from the reference clone.
 
 ## Current state
 
-`FOUNDATION SLICE IMPLEMENTED / AUTOMATION NOT IMPLEMENTED`
+`LOCAL AUTOMATION SLICES IMPLEMENTED / WINDOWS VALIDATION ON HOLD`
 
 The repository structure, accepted architecture, module specifications, implementation
-plan, and task backlog exist. T-001 provides a tested version/help CLI and local
-quality gates. No command currently logs in to Wellfound, scans jobs, fills forms, or
-submits an application.
+plan, and task backlog exist. The local fixture-backed scan, draft, approval, and
+single-application submission slices are implemented. Live Wellfound use remains a
+manual gated pilot, and hosted Windows validation is intentionally on hold.
 
 ## Repository boundaries
 
@@ -35,21 +35,22 @@ npm run setup
 npm run login
 npm run scan
 npm run draft
-npm run apply -- --application-id <id>
+npm run submit -- --application-id <id>
 npm run schedule
 npm run doctor
 ```
 
-The `setup`, `build`, `typecheck`, `lint`, `test`, and foundation CLI commands are
-implemented. Browser login, scanning, drafting, scheduling, and submission remain
-future tasks.
+The `setup`, `build`, `typecheck`, `lint`, `test`, scan, draft, approval, and fixture
+submission paths are implemented. Login, scheduling, live-provider validation, and
+Codex integration remain future tasks.
 
 ## Start here
 
 1. Review `docs/PROJECT_SPEC.md`.
 2. Review module specifications under `docs/specs/`.
 3. Review `tasks/plan.md` and `tasks/todo.md`.
-4. Review T-001 evidence, then start Task `T-002` for managed-browser setup.
+4. Review the completed task evidence, then continue with the controlled live-pilot
+   checklist only when explicitly authorized.
 
 ## Authoritative sources
 

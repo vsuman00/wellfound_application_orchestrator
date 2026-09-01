@@ -4,6 +4,7 @@ export type CliResult =
   | { readonly command: "setup" }
   | { readonly command: "scan"; readonly url: string }
   | { readonly command: "approve"; readonly applicationId: string; readonly confirm: boolean }
+  | { readonly command: "submit"; readonly applicationId: string }
   | { readonly command: "error"; readonly message: string };
 
 export function parseArgs(argv: readonly string[]): CliResult {
@@ -49,6 +50,13 @@ export function parseArgs(argv: readonly string[]): CliResult {
       return { command: "error", message: "approve requires --application-id <id> with optional --confirm." };
     }
     return { command: "approve", applicationId: rest[1], confirm: rest.length === 3 };
+  }
+
+  if (first === "submit") {
+    if (rest.length !== 2 || rest[0] !== "--application-id" || rest[1] === undefined) {
+      return { command: "error", message: "submit requires exactly --application-id <id>." };
+    }
+    return { command: "submit", applicationId: rest[1] };
   }
 
   return { command: "error", message: `Unknown command: ${first}` };

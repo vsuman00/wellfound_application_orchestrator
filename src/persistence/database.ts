@@ -3,7 +3,7 @@ import { dirname } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 export const INITIAL_SCHEMA_VERSION = 1;
-export const LATEST_SCHEMA_VERSION = 5;
+export const LATEST_SCHEMA_VERSION = 6;
 
 export const INITIAL_SCHEMA = `
 CREATE TABLE jobs (
@@ -127,6 +127,17 @@ CREATE TABLE approvals (
 ) STRICT;
 `;
 
+export const SIXTH_SCHEMA = `
+ALTER TABLE application_attempts ADD COLUMN run_id TEXT;
+
+CREATE TABLE quota_reservations (
+  application_id TEXT PRIMARY KEY REFERENCES applications(id) ON DELETE CASCADE,
+  run_id TEXT NOT NULL,
+  reserved_day TEXT NOT NULL,
+  reserved_at TEXT NOT NULL
+) STRICT;
+`;
+
 export function openDatabase(databasePath: string): DatabaseSync {
   mkdirSync(dirname(databasePath), { recursive: true });
   const database = new DatabaseSync(databasePath, {
@@ -158,7 +169,8 @@ function migrate(database: DatabaseSync): void {
     [2, SECOND_SCHEMA],
     [3, THIRD_SCHEMA],
     [4, FOURTH_SCHEMA],
-    [5, FIFTH_SCHEMA]
+    [5, FIFTH_SCHEMA],
+    [6, SIXTH_SCHEMA]
   ];
   for (const [version, sql] of migrations) {
     if (version <= latestVersion) {

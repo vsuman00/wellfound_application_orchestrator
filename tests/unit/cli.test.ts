@@ -45,6 +45,12 @@ describe("parseArgs", () => {
     expect(parseArgs(["approve", "--application-id", "application-1", "--confirm"])).toEqual({ command: "approve", applicationId: "application-1", confirm: true });
   });
 
+  it("requires one explicit application id for submission", () => {
+    expect(parseArgs(["submit"])).toEqual({ command: "error", message: "submit requires exactly --application-id <id>." });
+    expect(parseArgs(["submit", "--application-id", "application-1"])).toEqual({ command: "submit", applicationId: "application-1" });
+    expect(parseArgs(["submit", "--application-id", "application-1", "--confirm"])).toEqual({ command: "error", message: "submit requires exactly --application-id <id>." });
+  });
+
   it("rejects unknown commands and extra arguments", () => {
     expect(parseArgs(["scan"])).toEqual({
       command: "error",

@@ -1,6 +1,6 @@
 # Project Specification: Wellfound Application Orchestrator
 
-Status: `IMPLEMENTATION IN PROGRESS; T-017 PARTIAL; WINDOWS VALIDATION ON HOLD`
+Status: `IMPLEMENTATION IN PROGRESS; T-017 COMPLETE LOCALLY; WINDOWS VALIDATION ON HOLD`
 
 ## Objective
 
@@ -48,7 +48,7 @@ npm run setup                         Validate runtime and install managed Chrom
 npm run login                         Create or refresh the local Wellfound session
 npm run scan -- [filters]             Discover and rank without filling forms
 npm run draft -- --job-id <id>        Prepare a non-submitting application draft
-npm run apply -- --application-id <id> Submit one explicitly approved application
+npm run submit -- --application-id <id> Submit one explicitly approved application
 npm run schedule -- [start|stop|run]  Manage or invoke scheduled draft work
 npm run doctor                        Diagnose Node, browser, auth, data, and lock state
 npm run build                         Compile TypeScript
@@ -145,6 +145,11 @@ Never:
 6. Subscription-authenticated Codex can schedule a local draft run without an API key;
    the deterministic Node workflow remains usable without Codex.
 7. CI passes on macOS and Windows with no live Wellfound or personal credentials.
+
+The local implementation currently includes fixture-backed confirmed submission with
+revision-bound approval, persisted evidence, atomic quota reservations, and safe
+unknown-outcome recovery. Hosted Windows validation and the live-provider pilot are
+deliberately separate release gates.
 
 ## Release gates
 

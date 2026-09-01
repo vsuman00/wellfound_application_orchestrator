@@ -2,6 +2,7 @@ import { parseArgs } from "./args.js";
 import { runSetupCommand } from "./setup.js";
 import { runScanCommand } from "./scan.js";
 import { runApproveCommand } from "./approve.js";
+import { runSubmitCommand } from "./submit.js";
 
 const VERSION = "0.1.0";
 
@@ -13,6 +14,7 @@ Usage:
   wellfound-orchestrator setup
   wellfound-orchestrator scan --url <loopback-url>
   wellfound-orchestrator approve --application-id <id>
+  wellfound-orchestrator submit --application-id <id>
 
 The setup command validates the runtime and installs managed Chromium.
 `;
@@ -46,6 +48,14 @@ async function main(): Promise<void> {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       console.error(`Approval review failed: ${message}`);
+      process.exitCode = 1;
+    }
+  } else if (result.command === "submit") {
+    try {
+      console.log(await runSubmitCommand(result.applicationId));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`Submission failed: ${message}`);
       process.exitCode = 1;
     }
   } else {

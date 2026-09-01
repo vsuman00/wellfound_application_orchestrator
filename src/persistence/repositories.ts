@@ -1,6 +1,14 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { ApplicationState } from "../domain/state-machine.js";
-import type { ApplicationRepository, ApprovalRepository, AuditPort, DraftRepository, UnitOfWork } from "../domain/ports.js";
+import type {
+  ApplicationRepository,
+  ApprovalRepository,
+  AuditPort,
+  DraftRepository,
+  SubmissionAttempt,
+  SubmissionRepository,
+  UnitOfWork
+} from "../domain/ports.js";
 import type { AuditEvent } from "../domain/audit.js";
 import type { JobRepository } from "../domain/ports.js";
 import type { JobRecord } from "../domain/job.js";
@@ -266,6 +274,61 @@ export function createApprovalRepository(database: DatabaseSync): ApprovalReposi
     },
     async save(record) {
       write.run(record.applicationId, record.draftId, record.draftRevision, record.approvedBy, record.approvedAt, record.expiresAt);
+    }
+  };
+}
+
+export function createSubmissionRepository(database: DatabaseSync): SubmissionRepository {
+  const nextAttempt = database.prepare(
+    "SELECT COALESCE(MAX(attempt_number), 0) + 1 AS next_attempt FROM application_attempts WHERE application_id = ?"
+  );
+  const evidenceExists = database.prepare(
+    "SELECT application_id FROM confirmation_evidence WHERE id = ?"
+  );
+  const writeEvidence = database.prepare(`
+    INSERT INTO confirmation_evidence (id, application_id, observed_at, signal, detail)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+  const writeAttempt = database.prepare(`
+    INSERT INTO application_attempts
+      (id, application_id, attempt_number, run_id, outcome_kind, confirmation_evidence_id, outcome_reason, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  return {
+    async nextAttemptNumber(applicationId) {
+      const row = nextAttempt.get(applicationId) as { next_attempt: number };
+      return row.next_attempt;
+    },
+    async saveEvidence(applicationId, evidence) {
+      const existing = evidenceExists.get(evidence.evidenceId) as { application_id: string } | undefined;
+      if (existing !== undefined) {
+        if (existing.application_id !== applicationId) {
+          throw new Error("Confirmation evidence is already linked to another application.");
+        }
+        return;
+      }
+      writeEvidence.run(
+        evidence.evidenceId,
+        applicationId,
+        evidence.observedAt,
+        evidence.signal,
+        evidence.detail
+      );
+    },
+    async saveAttempt(attempt: SubmissionAttempt) {
+      const evidenceId = attempt.outcome.kind === "confirmed" ? attempt.outcome.evidence.evidenceId : null;
+      const reason = attempt.outcome.kind === "confirmed" ? null : attempt.outcome.reason;
+      writeAttempt.run(
+        attempt.id,
+        attempt.applicationId,
+        attempt.attemptNumber,
+        attempt.runId ?? null,
+        attempt.outcome.kind,
+        evidenceId,
+        reason,
+        attempt.createdAt
+      );
     }
   };
 }
