@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 export const INITIAL_SCHEMA_VERSION = 1;
+export const LATEST_SCHEMA_VERSION = 2;
 
 export const INITIAL_SCHEMA = `
 CREATE TABLE jobs (
@@ -85,6 +86,20 @@ CREATE TABLE audit_events (
 ) STRICT;
 `;
 
+export const SECOND_SCHEMA = `
+CREATE TABLE run_locks (
+  key TEXT PRIMARY KEY,
+  owner TEXT NOT NULL,
+  expires_at TEXT NOT NULL
+) STRICT;
+
+CREATE UNIQUE INDEX applications_one_per_job
+  ON applications(job_id)
+  WHERE job_id IS NOT NULL;
+
+ALTER TABLE application_attempts ADD COLUMN outcome_reason TEXT;
+`;
+
 export function openDatabase(databasePath: string): DatabaseSync {
   mkdirSync(dirname(databasePath), { recursive: true });
   const database = new DatabaseSync(databasePath, {
@@ -107,21 +122,27 @@ function migrate(database: DatabaseSync): void {
     | undefined;
   const latestVersion = latestRow?.version ?? 0;
 
-  if (latestVersion > INITIAL_SCHEMA_VERSION) {
-    throw new Error(`Database schema version ${latestVersion} is newer than supported version ${INITIAL_SCHEMA_VERSION}.`);
-  }
-  if (latestVersion === INITIAL_SCHEMA_VERSION) {
-    return;
+  if (latestVersion > LATEST_SCHEMA_VERSION) {
+    throw new Error(`Database schema version ${latestVersion} is newer than supported version ${LATEST_SCHEMA_VERSION}.`);
   }
 
-  database.exec("BEGIN IMMEDIATE;");
-  try {
-    database.exec(INITIAL_SCHEMA);
-    database.prepare("INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)")
-      .run(INITIAL_SCHEMA_VERSION, new Date().toISOString());
-    database.exec("COMMIT;");
-  } catch (error) {
-    database.exec("ROLLBACK;");
-    throw error;
+  const migrations: ReadonlyArray<readonly [number, string]> = [
+    [INITIAL_SCHEMA_VERSION, INITIAL_SCHEMA],
+    [2, SECOND_SCHEMA]
+  ];
+  for (const [version, sql] of migrations) {
+    if (version <= latestVersion) {
+      continue;
+    }
+    database.exec("BEGIN IMMEDIATE;");
+    try {
+      database.exec(sql);
+      database.prepare("INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)")
+        .run(version, new Date().toISOString());
+      database.exec("COMMIT;");
+    } catch (error) {
+      database.exec("ROLLBACK;");
+      throw error;
+    }
   }
 }

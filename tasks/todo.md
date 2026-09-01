@@ -1,6 +1,6 @@
 # Implementation Backlog
 
-Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; NEXT T-008`
+Status: `T-001 COMPLETE; T-002 IMPLEMENTED; T-003 COMPLETE; T-004 COMPLETE; T-005 COMPLETE; T-006 COMPLETE LOCALLY; T-007 COMPLETE LOCALLY; T-008 COMPLETE LOCALLY; NEXT G1`
 
 ## T-000: Create isolated planning repository
 
@@ -177,17 +177,27 @@ The database is created under a temporary external directory and WAL is enabled.
 
 ## T-008: Add idempotency, locks, backup, and crash recovery
 
+**Status:** Complete locally; hosted Windows validation pending.
+
 **Acceptance criteria:**
 
-- [ ] Concurrent run/job acquisition has one winner and releases safely after failure.
-- [ ] Duplicate Wellfound identity cannot create a second active application.
-- [ ] Crash during submission produces recoverable outcome-unknown state.
+- [x] Concurrent run/job acquisition has one winner and releases safely after failure.
+- [x] Duplicate Wellfound identity cannot create a second active application.
+- [x] Crash during submission produces recoverable outcome-unknown state.
 
-**Verification:** concurrent-process, forced-crash, backup, and restore integration tests.
+**Verification:** 3 recovery integration tests and the full 32-test suite pass, with lint,
+both typecheck passes, and build green. SQLite lock ownership is atomic and expiry-aware;
+canonical job identity has a unique application index; interrupted submitting attempts
+are recorded with a reason and transition to `OUTCOME_UNKNOWN` in one transaction.
+The full concurrent-process and forced-crash matrix remains a hosted Windows/G1 gate.
 
 **Likely files:** `src/persistence/locks.ts`, `src/persistence/recovery.ts`, `src/persistence/backup.ts`, `tests/integration/recovery.test.ts`.
 
 **Dependencies:** T-007.
+
+**Evidence:** `src/persistence/locks.ts`, `src/persistence/recovery.ts`,
+`src/persistence/migrations/002-locks-recovery.sql`, and
+`tests/integration/recovery.test.ts`.
 
 ## Checkpoint G1: Foundation and durable state
 
